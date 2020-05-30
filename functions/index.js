@@ -29,6 +29,7 @@ const firebaseApp = firebase.initializeApp({
 });
 
 app.get("/copy/:alias", (request, response) => {
+  try {
   var db = firebaseApp.database();
   var ref = db.ref("copy/yy" + request.params.alias);
 
@@ -44,6 +45,10 @@ app.get("/copy/:alias", (request, response) => {
       return response.end(JSON.stringify(errorObject));
     }
   );
+  }
+  catch (_err){
+    return response.end(JSON.stringify(_err));
+  }
 });
 
 exports.app = functions.https.onRequest(app);
