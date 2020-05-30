@@ -51,4 +51,9 @@ app.get("/copy/:alias", (request, response) => {
   }
 });
 
+
+app.get("/copy", (request, response) => {
+  return response.end("some value in copy page");
+});
+
 exports.app = functions.https.onRequest(app);
