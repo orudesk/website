@@ -14,7 +14,7 @@ const firebaseApp = firebase.initializeApp();
 app.get("/copy/:alias", (request, response) => {
   try {
   var db = firebaseApp.database();
-  var ref = db.ref("copy/yy" + request.params.alias);
+  var ref = db.ref("copy/" + request.params.alias);
 
   // Attach an asynchronous callback to read the data at our posts reference
   ref.once(
