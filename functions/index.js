@@ -40,4 +40,17 @@ app.get("/api/copy/:alias", (request, response) => {
   }
 });
 
+app.post("/api/copy/:alias", (request, response) => {
+  try {
+    var db = firebaseApp.database();
+    var ref = db.ref("copy/" + request.params.alias);
+    var value = request.body.value;
+
+    // Attach an asynchronous callback to read the data at our posts reference
+    ref.set(request.body);
+  } catch (_err) {
+    return response.end(JSON.stringify(_err));
+  }
+});
+
 exports.app = functions.https.onRequest(app);

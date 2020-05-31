@@ -105,25 +105,13 @@
         <button class="button" type="button" onclick="copyClipboard()">
           Copy
         </button>
-        <button
-          class="button"
-          type="button"
-          onclick="snackMessage('Downloaded data from server')"
-        >
+        <button class="button" type="button" onclick="download()">
           Download
         </button>
-        <button
-          class="button"
-          type="button"
-          onclick="snackMessage('Uploaded data to server')"
-        >
+        <button class="button" type="button" onclick="upload()">
           Upload
         </button>
-        <button
-          class="button"
-          type="button"
-          onclick="snackMessage('Cleared in server too')"
-        >
+        <button class="button" type="button" onclick="clear()">
           Clear
         </button>
       </div>
@@ -137,16 +125,16 @@ At w3schools.com you will learn how to make a website. They offer free tutorials
     <div id="snackbar">Some text some message..</div>
 
     <script>
-      function snackMessage(_message) {
-        var x = document.getElementById("snackbar");
-        x.innerText = _message;
-        x.className = "show";
-        setTimeout(function () {
-          x.className = x.className.replace("show", "");
-        }, 4000);
+      download();
+
+      function copyClipboard() {
+        var copyText = document.getElementById("content");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        document.execCommand("copy");
       }
 
-      (function onLoad() {
+      function download() {
         var x = document.getElementById("content");
         x.innerText = "Loading...";
 
@@ -154,21 +142,67 @@ At w3schools.com you will learn how to make a website. They offer free tutorials
         var directories = path.split("/");
         var lastDirecotry = directories[directories.length - 1];
 
-        fetch(window.location.protocol + "//" +window.location.hostname + "/api/copy/" + lastDirecotry)
+        fetch(
+          window.location.protocol +
+            "//" +
+            window.location.hostname +
+            "/api/copy/" +
+            lastDirecotry
+        )
           .then((_res) => {
             _res.json().then((data) => {
-              x.innerText = data.value;
-              snackMessage("Loaded Successfully");
+              if (data && data.value) {
+                x.innerText = data.value;
+                snackMessage("Loaded Successfully");
+              } else {
+                x.innerText = "";
+              }
             });
           })
-          .catch((_err) => {});
-      })();
+          .catch((_err) => {
+            snackMessage("Sorry could not load, please try again.");
+          });
+      }
 
-      function copyClipboard() {
-        var copyText = document.getElementById("content");
-        copyText.select();
-        copyText.setSelectionRange(0, 99999);
-        document.execCommand("copy");
+      function upload() {
+        uploadValue(x.innerText, "Uploaded to server");
+      }
+
+      function clear() {
+        uploadValue("", "Cleared in server too..");
+      }
+
+      function uploadValue(_value, _snackMessage) {
+        fetch(
+          window.location.protocol +
+            "//" +
+            window.location.hostname +
+            "/api/copy/" +
+            lastDirecotry,
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ value: _value }),
+          }
+        )
+          .then((_res) => {
+            snackMessage(_snackMessage);
+          })
+          .catch((_err) => {
+            snackMessage("Sorry some error, please try again.");
+          });
+      }
+
+      function snackMessage(_message) {
+        var x = document.getElementById("snackbar");
+        x.innerText = _message;
+        x.className = "show";
+        setTimeout(function () {
+          x.className = x.className.replace("show", "");
+        }, 4000);
       }
     </script>
   </body>
