@@ -154,7 +154,7 @@ At w3schools.com you will learn how to make a website. They offer free tutorials
         var directories = path.split("/");
         var lastDirecotry = directories[directories.length - 1];
 
-        fetch(window.location.hostname + "/copy/" + lastDirecotry)
+        fetch(window.location.hostname + "/api/copy/" + lastDirecotry)
           .then((_res) => {
             _res.json().then((data) => {
               x.innerText = data.value;
