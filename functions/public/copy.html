@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .container {
+        text-align: center;
+        margin-top: 20px;
+      }
+      .button {
+        background-color: #4caf50;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        -webkit-transition-duration: 0.4s;
+        transition-duration: 0.4s;
+      }
+      .button:hover {
+        box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.2),
+          0 10px 30px 0 rgba(0, 0, 0, 0.19);
+      }
+      .input {
+        margin-top: 30px;
+        width: 75%;
+        height: 100%;
+        resize: none;
+        padding: 10px;
+      }
+
+      #snackbar {
+        visibility: hidden;
+        min-width: 250px;
+        margin-left: -125px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1;
+        left: 50%;
+        bottom: 30px;
+        font-size: 17px;
+      }
+
+      #snackbar.show {
+        visibility: visible;
+        -webkit-animation: fadein 0.5s, fadeout 0.5s 3.5s;
+        animation: fadein 0.5s, fadeout 0.5s 3.5s;
+      }
+
+      @-webkit-keyframes fadein {
+        from {
+          bottom: 0;
+          opacity: 0;
+        }
+        to {
+          bottom: 30px;
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadein {
+        from {
+          bottom: 0;
+          opacity: 0;
+        }
+        to {
+          bottom: 30px;
+          opacity: 1;
+        }
+      }
+
+      @-webkit-keyframes fadeout {
+        from {
+          bottom: 30px;
+          opacity: 1;
+        }
+        to {
+          bottom: 0;
+          opacity: 0;
+        }
+      }
+
+      @keyframes fadeout {
+        from {
+          bottom: 30px;
+          opacity: 1;
+        }
+        to {
+          bottom: 0;
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <button class="button" type="button" onclick="copyClipboard()">
+          Copy
+        </button>
+        <button
+          class="button"
+          type="button"
+          onclick="snackMessage('Downloaded data from server')"
+        >
+          Download
+        </button>
+        <button
+          class="button"
+          type="button"
+          onclick="snackMessage('Uploaded data to server')"
+        >
+          Upload
+        </button>
+        <button
+          class="button"
+          type="button"
+          onclick="snackMessage('Cleared in server too')"
+        >
+          Clear
+        </button>
+      </div>
+      <div class="content">
+        <textarea class="input" id="content" rows="30">
+At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.
+          </textarea
+        >
+      </div>
+    </div>
+    <div id="snackbar">Some text some message..</div>
+
+    <script>
+      function snackMessage(_message) {
+        var x = document.getElementById("snackbar");
+        x.innerText = _message;
+        x.className = "show";
+        setTimeout(function () {
+          x.className = x.className.replace("show", "");
+        }, 4000);
+      }
+
+      (function onLoad() {
+        var x = document.getElementById("content");
+        x.innerText = "Loading...";
+
+        var path = location.pathname;
+        var directories = path.split("/");
+        var lastDirecotry = directories[directories.length - 1];
+
+        fetch(window.location.hostname + "/copy/" + lastDirecotry)
+          .then((_res) => {
+            _res.json().then((data) => {
+              x.innerText = data.value;
+              snackMessage("Loaded Successfully");
+            });
+          })
+          .catch((_err) => {});
+      })();
+
+      function copyClipboard() {
+        var copyText = document.getElementById("content");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+      }
+    </script>
+  </body>
+</html>
