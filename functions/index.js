@@ -47,7 +47,13 @@ app.post("/api/copy/:alias", (request, response) => {
     var value = request.body.value;
 
     // Attach an asynchronous callback to read the data at our posts reference
-    ref.set(request.body);
+    ref.set(request.body)
+    .then(_res => {
+      return response.end("Success");
+    })
+    .catch(_err => {
+      return response.end(JSON.stringify(_err));
+    });
   } catch (_err) {
     return response.end(JSON.stringify(_err));
   }
