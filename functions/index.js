@@ -27,11 +27,9 @@ app.get("/api/copy/:alias", (request, response) => {
     ref.once(
       "value",
       function (snapshot) {
-        console.log(snapshot.val());
         return response.end(JSON.stringify(snapshot.val()));
       },
       function (errorObject) {
-        console.log("The read failed: " + errorObject.code);
         return response.end(JSON.stringify(errorObject));
       }
     );
@@ -45,7 +43,6 @@ app.post("/api/copy/:alias", (request, response) => {
     var db = firebaseApp.database();
     var ref = db.ref("copy/" + request.params.alias);
     var value = request.body.value;
-    console.log("=============", request.body)
 
     // Attach an asynchronous callback to read the data at our posts reference
     ref
