@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-const firebaseApp = firebase.initializeApp();
+var firebaseApp =  firebase.initializeApp();
 
 app.get("/copy/:alias", (request, response) => {
   response.sendFile(path.join(public, "copy.html"));
@@ -45,15 +45,17 @@ app.post("/api/copy/:alias", (request, response) => {
     var db = firebaseApp.database();
     var ref = db.ref("copy/" + request.params.alias);
     var value = request.body.value;
+    console.log("=============", request.body)
 
     // Attach an asynchronous callback to read the data at our posts reference
-    ref.set(request.body)
-    .then(_res => {
-      return response.end("Success");
-    })
-    .catch(_err => {
-      return response.end(JSON.stringify(_err));
-    });
+    ref
+      .set(request.body)
+      .then((_res) => {
+        return response.end("Success");
+      })
+      .catch((_err) => {
+        return response.end(JSON.stringify(_err));
+      });
   } catch (_err) {
     return response.end(JSON.stringify(_err));
   }

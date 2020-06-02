@@ -111,14 +111,12 @@
         <button class="button" type="button" onclick="upload()">
           Upload
         </button>
-        <button class="button" type="button" onclick="clear()">
+        <button class="button" type="button" onclick="clearFromServer()">
           Clear
         </button>
       </div>
       <div class="content">
-        <textarea class="input" id="content" rows="30">
-At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.
-          </textarea
+        <textarea class="input" id="content" rows="30"></textarea
         >
       </div>
     </div>
@@ -132,6 +130,7 @@ At w3schools.com you will learn how to make a website. They offer free tutorials
         copyText.select();
         copyText.setSelectionRange(0, 99999);
         document.execCommand("copy");
+        snackMessage("Copied to clipboard");
       }
 
       function download() {
@@ -165,14 +164,22 @@ At w3schools.com you will learn how to make a website. They offer free tutorials
       }
 
       function upload() {
-        uploadValue(x.innerText, "Uploaded to server");
+        var x = document.getElementById("content").value;
+        console.log(x);
+        uploadValue(x, "Uploaded to server");
       }
-
-      function clear() {
+      function clearFromServer() {
         uploadValue("", "Cleared in server too..");
       }
 
+      function clear() {
+        debugger;
+        console.log("calling clear");
+        //uploadValue("", "Cleared in server too..");
+      }
+
       function uploadValue(_value, _snackMessage) {
+        console.log("upload value", _value);
         fetch(
           window.location.protocol +
             "//" +
@@ -189,6 +196,9 @@ At w3schools.com you will learn how to make a website. They offer free tutorials
           }
         )
           .then((_res) => {
+            if (_value === "") {
+              document.getElementById("content").value = "";
+            }
             snackMessage(_snackMessage);
           })
           .catch((_err) => {
