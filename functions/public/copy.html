@@ -180,6 +180,13 @@
 
       function uploadValue(_value, _snackMessage) {
         console.log("upload value", _value);
+
+
+        var path = location.pathname;
+        var directories = path.split("/");
+        var lastDirecotry = directories[directories.length - 1];
+
+        
         fetch(
           window.location.protocol +
             "//" +
